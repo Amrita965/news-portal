@@ -16,7 +16,9 @@
         <section>
             <nav class="navbar navbar-expand-lg bg-body-tertiary">
                 <div class="container-fluid">
-                    <div class="navbar-brand mb-0 h1"><span class="bg-secondary text-white px-3 py-2 d-inline rounded-2">Deligthful</span> Dose Daily</div>
+                    <div class="navbar-brand mb-0 h1"><span
+                            class="bg-primary text-white px-3 py-2 d-inline rounded-2">Deligthful</span> Dose Daily
+                    </div>
                     <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
                         data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false"
                         aria-label="Toggle navigation">
@@ -44,8 +46,34 @@
     <main class="container mx-auto mt-5">
         <section>
             <div id="news-container" class="row row-cols-lg-1 row-cols-1">
-
             </div>
+        </section>
+        <section>
+                <!-- Modal -->
+                <div class="modal fade " id="news-detail-modal" tabindex="-1" aria-labelledby="exampleModalLabel"
+                    aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h1 class="modal-title fs-5" id="news-thumbnail"></h1>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                    aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <p id="author-name" class="h5"></p>
+                                <p id="published-date"></p>
+                                <div class="mb-3">
+                                    <img class="img-fluid" id="news-img" src="" alt="">
+                                </div>
+                                <p id="news-details"></p>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+                                
+                            </div>
+                        </div>
+                    </div>
+                </div>
         </section>
     </main>
     <!-- Remove the container if you want to extend the Footer to full width. -->

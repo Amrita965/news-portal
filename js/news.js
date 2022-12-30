@@ -1,52 +1,52 @@
-const loadNewsCategory = async() => {
-    try {
-        const url = 'https://openapi.programming-hero.com/api/news/categories';
-        const res = await fetch(url);
-        const data = await res.json();
-        displayNewsCategory(data.data.news_category);
-    } catch(err) {
-        window.alert("Error:", err);
-    }
+const loadNewsCategory = async () => {
+  try {
+    const url = 'https://openapi.programming-hero.com/api/news/categories';
+    const res = await fetch(url);
+    const data = await res.json();
+    displayNewsCategory(data.data.news_category);
+  } catch (err) {
+    window.alert("Error:", err);
+  }
 }
 
 const displayNewsCategory = newsCategories => {
-    const newsCategoryContainer = document.getElementById('news-category-container');
-    let n = 1;
-    newsCategories.forEach(category => {
-        const input = createHTMLElement('input', { type: 'radio', class: 'btn-check', name: 'btnradio', id: `btnradio${n}`, autocomplete: 'off'});
-        if(n == 1) {
-          setAttributes(input, { checked: '' });
-        }
-        const label = createHTMLElement('label', {class: 'btn btn-outline-primary rounded-0', for: `btnradio${n}`, onclick: `loadNews('${category.category_id}')`});
-        label.innerText = `${category.category_name}`
-        newsCategoryContainer.appendChild(input);
-        newsCategoryContainer.appendChild(label);
-        n++;    
-    });    
+  const newsCategoryContainer = document.getElementById('news-category-container');
+  let n = 1;
+  newsCategories.forEach(category => {
+    const input = createHTMLElement('input', { type: 'radio', class: 'btn-check', name: 'btnradio', id: `btnradio${n}`, autocomplete: 'off' });
+    if (n == 1) {
+      setAttributes(input, { checked: '' });
+    }
+    const label = createHTMLElement('label', { class: 'btn btn-outline-primary rounded-0', for: `btnradio${n}`, onclick: `loadNews('${category.category_id}')` });
+    label.innerText = `${category.category_name}`
+    newsCategoryContainer.appendChild(input);
+    newsCategoryContainer.appendChild(label);
+    n++;
+  });
 }
 
-const loadNews = async(categoryId) => {
-    const url = `https://openapi.programming-hero.com/api/news/category/${categoryId}`
-    console.log(url);
-    const res = await fetch(url);
-    const data = await res.json();
-    displayAllNews(data.data);
+const loadNews = async (categoryId) => {
+  const url = `https://openapi.programming-hero.com/api/news/category/${categoryId}`
+  console.log(url);
+  const res = await fetch(url);
+  const data = await res.json();
+  displayAllNews(data.data);
 
 }
 
 const displayAllNews = allNews => {
-    allNews.sort((first, second) => (first.total_view < second.total_view) ? 1 : -1);
-    const newsContainer = document.getElementById('news-container');
-    newsContainer.textContent = '';
-    allNews.forEach(news => {
-      console.log(news);
-        const newsDiv = document.createElement('div');
-        newsDiv.classList.add('col');
-        newsDiv.innerHTML = `
-        <div class="card mb-3">
+  allNews.sort((first, second) => (first.total_view < second.total_view) ? 1 : -1);
+  const newsContainer = document.getElementById('news-container');
+  newsContainer.textContent = '';
+  allNews.forEach(news => {
+    console.log(news);
+    const newsDiv = document.createElement('div');
+    newsDiv.classList.add('col');
+    newsDiv.innerHTML = `
+        <div class="card mb-3" data-bs-toggle="modal" data-bs-target="#news-detail-modal" onclick="loadNewsDetail('${news._id}')">
           <div class="row g-0">
             <div class="col-md-4 p-3">
-                <img src="${news.image_url}" class="img-fluid rounded-start" alt="...">
+                <img src="${news.image_url}" class="img-fluid rounded-start" alt="">
             </div>
               <div class="col-md-8">
                   <div class="card-body">
@@ -58,12 +58,13 @@ const displayAllNews = allNews => {
                         <img src="${news.author.img}" alt="author" style="width: 50px; height: 50px;" class="rounded-circle">
                       </div>
                       <div class="ms-2">
-                        <h6 class="m-0">${news.author.name}</h6>
-                        <p class="m-0">${news.author.published_date}</p>
+                        <h6 class="m-0">${news.author.name === 'system' || news.author.name === null || news.author.name === "" ? 'No author found' : news.author.name}</h6>
+                        <p class="m-0">${news.author.published_date === null ? 'No date found' : news.author.published_date}</p>
                       </div>
                       </div>
                       <div class="col-lg-4 col-4 d-flex align-items-center justify-content-center">
-                        <h5 class="m-0">${news.total_view + 'K'}</h5>
+                        <div class="me-1"><i class="fa-regular fa-eye"></i></div>
+                        <div><h5 class="m-0">${(news.total_view ? news.total_view : "0") + 'K'}</h5></div>
                       </div>
                       <div class="col-lg-4 col-12 d-flex align-items-center justify-content-center">
                       <div>
@@ -76,9 +77,26 @@ const displayAllNews = allNews => {
           </div>
         </div>
         `
-        newsContainer.appendChild(newsDiv);
-        console.log(news);
-    });
+    newsContainer.appendChild(newsDiv);
+    console.log(news);
+  });
+}
+
+const loadNewsDetail = async (id) => {
+  const url = `https://openapi.programming-hero.com/api/news/${id}`;
+  // console.log(url);
+  const res = await fetch(url);
+  const data = await res.json();
+  displayNewsDetailInModal(data.data[0]);
+}
+
+const displayNewsDetailInModal = (news) => {
+  console.log(news);
+  setElementContentById('news-thumbnail', news.title);
+  setAttributes(getElementById('news-img'), {src: news.image_url});
+  setElementContentById('news-details', news.details);
+  setElementContentById('author-name', `Author name: ${news.author.name === 'system' || news.author.name === null || news.author.name === "" ? 'No author found' : news.author.name}`)
+  setElementContentById('published-date', `Published Date: ${news.author.published_date === null ? 'No date found' : news.author.published_date}`);
 }
 
 loadNewsCategory();

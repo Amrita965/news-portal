@@ -9,3 +9,12 @@ const setAttributes = (element, attributes = {}) => {
         element.setAttribute(key, attributes[key]);
     }
 }
+
+const setElementContentById = (elementId, content) => {
+    const element = document.getElementById(elementId);
+    element.innerText = content;
+}
+
+const getElementById = elementId => {
+    return document.getElementById(elementId);
+};
