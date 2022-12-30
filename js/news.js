@@ -27,11 +27,14 @@ const displayNewsCategory = newsCategories => {
 
 const loadNews = async (categoryId, categoryName) => {
   loader(true);
-  const url = `https://openapi.programming-hero.com/api/news/category/${categoryId}`
-  console.log(url);
-  const res = await fetch(url);
-  const data = await res.json();
-  displayAllNews(data.data, categoryName);
+  try {
+    const url = `https://openapi.programming-hero.com/api/news/category/${categoryId}`
+    const res = await fetch(url);
+    const data = await res.json();
+    displayAllNews(data.data, categoryName);
+  } catch (err) {
+    window.alert('Unable to load data. Please wait a moment and try again.');
+  }
 
 }
 
@@ -42,7 +45,6 @@ const displayAllNews = (allNews, categoryName) => {
   const newsContainer = getElementById('news-container');
   newsContainer.textContent = '';
   allNews.forEach(news => {
-    console.log(news);
     const newsDiv = createHTMLElement('div');
     setAttributes(newsDiv, { class: 'col' });
     newsDiv.innerHTML = `
