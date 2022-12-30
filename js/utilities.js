@@ -1,13 +1,13 @@
 const createHTMLElement = (tagName, attributes = {}) => {
     const element = document.createElement(tagName);
-    if(Object.keys(attributes).length != 0) {
+    if (Object.keys(attributes).length != 0) {
         setAttributes(element, attributes);
     }
     return element;
-}   
+}
 
 const setAttributes = (element, attributes = {}) => {
-    for(const key in attributes) {
+    for (const key in attributes) {
         element.setAttribute(key, attributes[key]);
     }
 }
@@ -23,7 +23,7 @@ const getElementById = elementId => {
 
 const loader = isLoading => {
     const spinner = document.getElementById('spinner');
-    if(isLoading) {
+    if (isLoading) {
         spinner.classList.remove('d-none');
     } else {
         spinner.classList.add('d-none');

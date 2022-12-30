@@ -5,7 +5,7 @@ const loadNewsCategory = async () => {
     const data = await res.json();
     displayNewsCategory(data.data.news_category);
   } catch (err) {
-    window.alert("Error:", err);
+    window.alert('Unable to load data. Please wait a moment and try again.');
   }
 }
 
@@ -44,9 +44,9 @@ const displayAllNews = (allNews, categoryName) => {
   allNews.forEach(news => {
     console.log(news);
     const newsDiv = createHTMLElement('div');
-    setAttributes(newsDiv, {class: 'col'});
+    setAttributes(newsDiv, { class: 'col' });
     newsDiv.innerHTML = `
-        <div class="card mb-3" data-bs-toggle="modal" data-bs-target="#news-detail-modal" onclick="loadNewsDetail('${news._id}')">
+        <div class="card mb-3 news-card" data-bs-toggle="modal" data-bs-target="#news-detail-modal" onclick="loadNewsDetail('${news._id}')" title="Click here for detailed news." style="cursor: pointer;">
           <div class="row g-0">
             <div class="col-md-4 p-3">
                 <img src="${news.image_url}" class="img-fluid rounded-start" alt="">
@@ -86,14 +86,18 @@ const displayAllNews = (allNews, categoryName) => {
 }
 
 const loadNewsDetail = async (id) => {
-  const url = `https://openapi.programming-hero.com/api/news/${id}`;
-  const res = await fetch(url);
-  const data = await res.json();
-  displayNewsDetailInModal(data.data[0]);
+  try {
+    const url = `https://openapi.programming-hero.com/api/news/${id}`;
+    const res = await fetch(url);
+    const data = await res.json();
+    displayNewsDetailInModal(data.data[0]);
+  } catch (err) {
+    window.alert('Unable to load data. Please wait a moment and try again.');
+  }
+
 }
 
 const displayNewsDetailInModal = (news) => {
-  console.log(news);
   setElementContentById('news-thumbnail', news.title);
   setAttributes(getElementById('news-img'), { src: news.image_url });
   setElementContentById('news-details', news.details);
