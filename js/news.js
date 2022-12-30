@@ -17,7 +17,7 @@ const displayNewsCategory = newsCategories => {
     if (n == 1) {
       setAttributes(input, { checked: '' });
     }
-    const label = createHTMLElement('label', { class: 'btn btn-outline-primary rounded-0', for: `btnradio${n}`, onclick: `loadNews('${category.category_id}')` });
+    const label = createHTMLElement('label', { class: 'btn btn-outline-primary rounded-0', for: `btnradio${n}`, onclick: `loadNews('${category.category_id}', '${category.category_name}')` });
     label.innerText = `${category.category_name}`
     newsCategoryContainer.appendChild(input);
     newsCategoryContainer.appendChild(label);
@@ -25,23 +25,26 @@ const displayNewsCategory = newsCategories => {
   });
 }
 
-const loadNews = async (categoryId) => {
+const loadNews = async (categoryId, categoryName) => {
+  loader(true);
   const url = `https://openapi.programming-hero.com/api/news/category/${categoryId}`
   console.log(url);
   const res = await fetch(url);
   const data = await res.json();
-  displayAllNews(data.data);
+  displayAllNews(data.data, categoryName);
 
 }
 
-const displayAllNews = allNews => {
+const displayAllNews = (allNews, categoryName) => {
   allNews.sort((first, second) => (first.total_view < second.total_view) ? 1 : -1);
-  const newsContainer = document.getElementById('news-container');
+  const totalItems = allNews.length;
+  setElementContentById('total-items-found', `${totalItems} items found for category ${categoryName}`);
+  const newsContainer = getElementById('news-container');
   newsContainer.textContent = '';
   allNews.forEach(news => {
     console.log(news);
-    const newsDiv = document.createElement('div');
-    newsDiv.classList.add('col');
+    const newsDiv = createHTMLElement('div');
+    setAttributes(newsDiv, {class: 'col'});
     newsDiv.innerHTML = `
         <div class="card mb-3" data-bs-toggle="modal" data-bs-target="#news-detail-modal" onclick="loadNewsDetail('${news._id}')">
           <div class="row g-0">
@@ -78,13 +81,12 @@ const displayAllNews = allNews => {
         </div>
         `
     newsContainer.appendChild(newsDiv);
-    console.log(news);
   });
+  loader(false);
 }
 
 const loadNewsDetail = async (id) => {
   const url = `https://openapi.programming-hero.com/api/news/${id}`;
-  // console.log(url);
   const res = await fetch(url);
   const data = await res.json();
   displayNewsDetailInModal(data.data[0]);
@@ -93,11 +95,11 @@ const loadNewsDetail = async (id) => {
 const displayNewsDetailInModal = (news) => {
   console.log(news);
   setElementContentById('news-thumbnail', news.title);
-  setAttributes(getElementById('news-img'), {src: news.image_url});
+  setAttributes(getElementById('news-img'), { src: news.image_url });
   setElementContentById('news-details', news.details);
   setElementContentById('author-name', `Author name: ${news.author.name === 'system' || news.author.name === null || news.author.name === "" ? 'No author found' : news.author.name}`)
   setElementContentById('published-date', `Published Date: ${news.author.published_date === null ? 'No date found' : news.author.published_date}`);
 }
 
 loadNewsCategory();
-loadNews('01');
+loadNews('01', 'Breaking News');

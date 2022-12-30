@@ -1,6 +1,8 @@
 const createHTMLElement = (tagName, attributes = {}) => {
     const element = document.createElement(tagName);
-    setAttributes(element, attributes);
+    if(Object.keys(attributes).length != 0) {
+        setAttributes(element, attributes);
+    }
     return element;
 }   
 
@@ -18,3 +20,14 @@ const setElementContentById = (elementId, content) => {
 const getElementById = elementId => {
     return document.getElementById(elementId);
 };
+
+const loader = isLoading => {
+    const spinner = document.getElementById('spinner');
+    if(isLoading) {
+        spinner.classList.remove('d-none');
+    } else {
+        spinner.classList.add('d-none');
+    }
+}
+
+
